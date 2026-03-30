@@ -1,0 +1,550 @@
+<Window x:Class="OzonPriceCalculator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="🍎 OZON 定价计算器"
+        Width="500"
+        Height="800"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFFFFFEF"
+        Foreground="#1D1D1F"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Topmost="False"
+        FontFamily="Segoe UI"
+        FontSize="12"
+        MouseDown="Window_MouseDown"
+        MouseMove="Window_MouseMove"
+        MouseUp="Window_MouseUp">
+
+    <Window.Resources>
+        <!-- 输入框样式 - Mac 精致风格 -->
+        <Style x:Key="MacInputStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#D1D1D6"/>
+            <Setter Property="BorderThickness" Value="0.8"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#000000"/>
+            <Setter Property="CaretBrush" Value="#0071E3"/>
+            <Setter Property="AcceptsReturn" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+                            <Grid>
+                                <ScrollViewer x:Name="PART_ContentHost"
+                                            Padding="{TemplateBinding Padding}"
+                                            VerticalAlignment="Center"
+                                            Focusable="False"
+                                            TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#B0B0B5"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#0071E3"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="1.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 按钮样式 -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#0071E3"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="16,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0077ED"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F5F5F7"/>
+            <Setter Property="Foreground" Value="#1D1D1F"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="16,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EBEBF0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- 卡片样式 - 毛玻璃风格 -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#E0E0E5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+
+        <!-- 标签样式 -->
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="#1D1D1F"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Padding" Value="0,0,0,3"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <!-- 标题栏按钮样式 -->
+        <Style x:Key="TitleBarButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent" 
+                                CornerRadius="50"
+                                Width="30"
+                                Height="30">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F0F0F0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ComboBox下拉按钮样式 -->
+        <Style x:Key="ComboBoxToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="0,10,10,0"
+                                Width="34"
+                                Height="34">
+                            <Path x:Name="arrow" 
+                                  HorizontalAlignment="Center" 
+                                  VerticalAlignment="Center" 
+                                  Data="M 0 0 L 8 8 L 16 0 Z" 
+                                  Fill="#86868B" 
+                                  StrokeThickness="0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="arrow" Property="Fill" Value="#1D1D1F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ComboBox样式 -->
+        <Style x:Key="MacComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#D1D1D6"/>
+            <Setter Property="BorderThickness" Value="0.8"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#000000"/>
+            <Setter Property="MaxDropDownHeight" Value="300"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="34"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter x:Name="PART_ContentHost"
+                                              Grid.Column="0"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="Center"/>
+                                <ToggleButton x:Name="ToggleButton"
+                                              Grid.Column="1"
+                                              Margin="0"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Right"
+                                              Width="34"
+                                              Height="34"
+                                              IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                              Style="{StaticResource ComboBoxToggleButtonStyle}"/>
+                                <Popup x:Name="PART_Popup"
+                                       Placement="Bottom"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                                       AllowsTransparency="True"
+                                       Focusable="False"
+                                       PopupAnimation="Slide">
+                                    <Border Background="#FFFFFF"
+                                            BorderBrush="#D1D1D6"
+                                            BorderThickness="0.8"
+                                            CornerRadius="10"
+                                            MinWidth="{TemplateBinding ActualWidth}">
+                                        <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto">
+                                            <ItemsPresenter/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#B0B0B5"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#0071E3"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="1.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <!-- 主容器 - 白色半透明背景 -->
+    <Grid Background="#FFFFFFEF">
+        <!-- 自定义标题栏 -->
+        <Grid Height="40" Background="#FFFFFF" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- 标题 -->
+            <TextBlock Grid.Column="0" 
+                       Text="🍎 OZON 定价计算器" 
+                       FontSize="14" 
+                       FontWeight="SemiBold" 
+                       Foreground="#1D1D1F" 
+                       VerticalAlignment="Center" 
+                       Margin="16,0,0,0"/>
+            
+            <!-- 标题栏按钮 -->
+            <StackPanel Grid.Column="1" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Center" 
+                        Margin="0,0,12,0">
+                <Button x:Name="MinimizeButton" 
+                        Style="{StaticResource TitleBarButtonStyle}" 
+                        Content="−" 
+                        FontSize="16" 
+                        Click="MinimizeButton_Click"/>
+                <Button x:Name="PinButton" 
+                        Style="{StaticResource TitleBarButtonStyle}" 
+                        Content="📌" 
+                        FontSize="14" 
+                        Click="PinButton_Click"/>
+                <Button x:Name="CloseButton" 
+                        Style="{StaticResource TitleBarButtonStyle}" 
+                        Content="✕" 
+                        FontSize="14" 
+                        Click="CloseButton_Click"/>
+            </StackPanel>
+        </Grid>
+        
+        <!-- 内容区域 -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0" Margin="0,40,0,0">
+            <StackPanel Margin="20">
+
+            <!-- 顶部标题区 -->
+            <StackPanel Margin="0,0,0,16">
+                <TextBlock Text="OZON 定价计算器"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="#000000"
+                           Margin="0,0,0,2"/>
+                <TextBlock Text="Glass Edition • 快速计算最优售价"
+                           FontSize="11"
+                           Foreground="#86868B"
+                           FontWeight="Normal"/>
+            </StackPanel>
+
+            <!-- 基础信息卡片 -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="📊 基础信息"
+                               FontSize="12"
+                               FontWeight="Bold"
+                               Foreground="#1D1D1F"
+                               Margin="0,0,0,10"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- 产品成本 -->
+                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,10">
+                            <Label Content="产品成本" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="CostInput"
+                                    Style="{StaticResource MacInputStyle}"
+                                    Text="20.00"
+                                    TextAlignment="Right"/>
+                        </StackPanel>
+
+                        <!-- 产品重量 -->
+                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,0,0,10">
+                            <Label Content="产品重量 / g" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="WeightInput"
+                                    Style="{StaticResource MacInputStyle}"
+                                    Text="200"
+                                    TextAlignment="Right"/>
+                        </StackPanel>
+
+                        <!-- 物流方式 -->
+                        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
+                            <Label Content="物流方式" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
+                            <ComboBox x:Name="ShippingMethodCombo"
+                                     Style="{StaticResource MacComboBoxStyle}"
+                                     Height="34"
+                                     FontSize="13"
+                                     Foreground="#000000">
+                                <ComboBoxItem Tag="2.9 + 0.042 * weight">Extra Small</ComboBoxItem>
+                                <ComboBoxItem Tag="23 + 0.033 * weight">Budget</ComboBoxItem>
+                                <ComboBoxItem Tag="16 + 0.045 * weight">Small</ComboBoxItem>
+                                <ComboBoxItem Tag="36 + 0.033 * weight">Big</ComboBoxItem>
+                                <ComboBoxItem Tag="22 + 0.045 * weight">Premium Small</ComboBoxItem>
+                                <ComboBoxItem Tag="62 + 0.033 * weight">Premium Big</ComboBoxItem>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <!-- 物流公式 -->
+                        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                <TextBlock Text="计算公式"
+                                          FontSize="11"
+                                          FontWeight="SemiBold"
+                                          Foreground="#1D1D1F"
+                                          Margin="0"/>
+                            </StackPanel>
+                            <TextBox x:Name="ShipFormulaInput"
+                                    Style="{StaticResource MacInputStyle}"
+                                    Text="3 + 0.045 * weight"
+                                    Foreground="#007AFF"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 费率设置卡片 -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="⚙️ 费率设置"
+                               FontSize="12"
+                               FontWeight="Bold"
+                               Foreground="#1D1D1F"
+                               Margin="0,0,0,10"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- 佣金 -->
+                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,10">
+                            <Label Content="佣金" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
+                            <Grid>
+                                <TextBox x:Name="CommissionInput"
+                                        Style="{StaticResource MacInputStyle}"
+                                        Text="20"
+                                        TextAlignment="Right"
+                                        Margin="0,0,32,0"/>
+                                <TextBlock Text="%" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#86868B" Margin="0,0,10,0"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- 广告 -->
+                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,0,0,10">
+                            <Label Content="广告费" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
+                            <Grid>
+                                <TextBox x:Name="AdInput"
+                                        Style="{StaticResource MacInputStyle}"
+                                        Text="10"
+                                        TextAlignment="Right"
+                                        Margin="0,0,32,0"/>
+                                <TextBlock Text="%" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#86868B" Margin="0,0,10,0"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- 货损 -->
+                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,8,0">
+                            <Label Content="货损率" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
+                            <Grid>
+                                <TextBox x:Name="DamageInput"
+                                        Style="{StaticResource MacInputStyle}"
+                                        Text="20"
+                                        TextAlignment="Right"
+                                        Margin="0,0,32,0"/>
+                                <TextBlock Text="%" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#86868B" Margin="0,0,10,0"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- 利润 -->
+                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="8,0,0,0">
+                            <Label Content="利润率" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
+                            <Grid>
+                                <TextBox x:Name="ProfitInput"
+                                        Style="{StaticResource MacInputStyle}"
+                                        Text="30"
+                                        TextAlignment="Right"
+                                        Margin="0,0,32,0"/>
+                                <TextBlock Text="%" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#86868B" Margin="0,0,10,0"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 计算结果卡片 -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="💰 计算结果"
+                               FontSize="12"
+                               FontWeight="Bold"
+                               Foreground="#1D1D1F"
+                               Margin="0,0,0,10"/>
+
+                    <!-- 物流成本 -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="物流成本" Foreground="#666666" FontSize="11"/>
+                        <TextBlock Grid.Column="1" x:Name="ShipCostDisplay" Text="¥ 12.00" Foreground="#1D1D1F" FontWeight="SemiBold" FontSize="11"/>
+                    </Grid>
+
+                    <!-- 实际成本 -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="实际成本（含佣金、广告费和货损）" Foreground="#666666" FontSize="11"/>
+                        <TextBlock Grid.Column="1" x:Name="RealCostDisplay" Text="¥ 24.00" Foreground="#1D1D1F" FontWeight="SemiBold" FontSize="11"/>
+                    </Grid>
+
+                    <!-- 分割线 -->
+                    <Border Height="1" Background="#E5E5E7" Margin="0,4,0,8"/>
+
+                    <!-- 精确售价 -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="精确售价" Foreground="#007AFF" FontWeight="SemiBold" FontSize="11"/>
+                        <TextBlock Grid.Column="1" x:Name="PriceDisplay" Text="¥ 58.33" Foreground="#007AFF" FontWeight="Bold" FontSize="13"/>
+                    </Grid>
+
+                    <!-- 整数售价 -->
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="推荐售价" Foreground="#34C759" FontWeight="SemiBold" FontSize="11"/>
+                        <TextBlock Grid.Column="1" x:Name="RoundedPriceDisplay" Text="¥ 59" Foreground="#34C759" FontWeight="Bold" FontSize="16"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 操作区 -->
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                       x:Name="CalculateButton"
+                       Content="🔄 重新计算"
+                       Style="{StaticResource PrimaryButtonStyle}"
+                       Click="CalculateButton_Click"/>
+
+                <Button Grid.Column="2"
+                       x:Name="CopyButton"
+                       Content="📋 复制售价"
+                       Style="{StaticResource SecondaryButtonStyle}"
+                       Click="CopyButton_Click"/>
+            </Grid>
+
+
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

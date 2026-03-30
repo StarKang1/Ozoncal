@@ -1,0 +1,17 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.sln.iml
+.vscode/
+node_modules/
+dist/
+build/
+*.exe
+*.dll
+*.pdb
+.DS_Store
+Thumbs.db
+.env
+.env.local
