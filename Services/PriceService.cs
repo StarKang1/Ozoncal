@@ -89,5 +89,40 @@ namespace OzonPriceCalculator.Services
                 return 0;
             }
         }
+
+        /// <summary>
+        /// 根据重量和价格自动判断物流方式
+        /// </summary>
+        /// <param name="weight">重量（克）</param>
+        /// <param name="priceRub">价格（卢布）</param>
+        /// <returns>物流方式</returns>
+        public static string GetShippingType(double weight, double priceRub)
+        {
+            // Extra Small
+            if (weight >= 1 && weight <= 500 && priceRub <= 1500)
+                return "Extra Small";
+
+            // Budget
+            if (weight >= 501 && weight <= 25000 && priceRub <= 1500)
+                return "Budget";
+
+            // Small
+            if (weight >= 1 && weight <= 2000 && priceRub >= 1501 && priceRub <= 7000)
+                return "Small";
+
+            // Big
+            if (weight >= 2001 && weight <= 25000 && priceRub >= 1501 && priceRub <= 7000)
+                return "Big";
+
+            // Premium Small
+            if (weight >= 1 && weight <= 5000 && priceRub >= 7001 && priceRub <= 250000)
+                return "Premium Small";
+
+            // Premium Big
+            if (weight >= 5001 && weight <= 25000 && priceRub >= 7001 && priceRub <= 250000)
+                return "Premium Big";
+
+            return "不符合任何物流类型，请检查重量/售价";
+        }
     }
 }

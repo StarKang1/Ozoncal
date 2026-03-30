@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using OzonPriceCalculator.Helpers;
@@ -16,6 +17,16 @@ namespace OzonPriceCalculator
             InitializeComponent();
             InitializeUI();
             LoadConfig();
+            // 异步获取汇率
+            _ = GetExchangeRateAsync();
+        }
+
+        /// <summary>
+        /// 异步获取汇率
+        /// </summary>
+        private async Task GetExchangeRateAsync()
+        {
+            await ExchangeRateService.GetCnyPerRubAsync();
         }
 
         private void InitializeUI()
@@ -49,77 +60,21 @@ namespace OzonPriceCalculator
 
         private void CheckWeightLimit()
         {
-            if (ShippingMethodCombo.SelectedItem is ComboBoxItem selectedItem)
+            // 移除重量提示，仅用于自动选择物流方式
+        }
+
+        /// <summary>
+        /// 根据推荐物流方式自动选择ComboBox中的对应选项
+        /// </summary>
+        /// <param name="recommendedShipping">推荐的物流方式</param>
+        private void AutoSelectShippingMethod(string recommendedShipping)
+        {
+            foreach (ComboBoxItem item in ShippingMethodCombo.Items)
             {
-                string method = selectedItem.Content?.ToString() ?? string.Empty;
-                if (double.TryParse(WeightInput.Text, out double weight) && double.TryParse(PriceDisplay.Text.Replace("¥ ", ""), out double price))
+                if (item.Content?.ToString() == recommendedShipping)
                 {
-                    // 转换价格为卢布（假设1人民币=10卢布，实际汇率可能不同）
-                    double priceInRubles = price * 10;
-                    
-                    switch (method)
-                    {
-                        case "Extra Small":
-                            if (weight < 1 || weight > 500)
-                            {
-                                MessageBox.Show("Extra Small物流方式重量范围为1g至500g，当前重量超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            if (priceInRubles > 1500)
-                            {
-                                MessageBox.Show("Extra Small物流方式价格限制为最高1500卢布，当前价格超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            break;
-                        case "Budget":
-                            if (weight < 501 || weight > 25000)
-                            {
-                                MessageBox.Show("Budget物流方式重量范围为501g至25000g，当前重量超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            if (priceInRubles > 1500)
-                            {
-                                MessageBox.Show("Budget物流方式价格限制为最高1500卢布，当前价格超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            break;
-                        case "Small":
-                            if (weight < 1 || weight > 2000)
-                            {
-                                MessageBox.Show("Small物流方式重量范围为1g至2000g，当前重量超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            if (priceInRubles < 1501 || priceInRubles > 7000)
-                            {
-                                MessageBox.Show("Small物流方式价格范围为1501至7000卢布，当前价格超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            break;
-                        case "Big":
-                            if (weight < 2001 || weight > 25000)
-                            {
-                                MessageBox.Show("Big物流方式重量范围为2001g至25000g，当前重量超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            if (priceInRubles < 1501 || priceInRubles > 7000)
-                            {
-                                MessageBox.Show("Big物流方式价格范围为1501至7000卢布，当前价格超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            break;
-                        case "Premium Small":
-                            if (weight < 1 || weight > 5000)
-                            {
-                                MessageBox.Show("Premium Small物流方式重量范围为1g至5000g，当前重量超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            if (priceInRubles < 7001 || priceInRubles > 250000)
-                            {
-                                MessageBox.Show("Premium Small物流方式价格范围为7001至250000卢布，当前价格超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            break;
-                        case "Premium Big":
-                            if (weight < 5001 || weight > 25000)
-                            {
-                                MessageBox.Show("Premium Big物流方式重量范围为5001g至25000g，当前重量超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            if (priceInRubles < 7001 || priceInRubles > 250000)
-                            {
-                                MessageBox.Show("Premium Big物流方式价格范围为7001至250000卢布，当前价格超出范围！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                            break;
-                    }
+                    ShippingMethodCombo.SelectedItem = item;
+                    break;
                 }
             }
         }
@@ -128,11 +83,24 @@ namespace OzonPriceCalculator
         {
             try
             {
+                CostInput.Text = ConfigManager.GetCost().ToString("F2");
+                WeightInput.Text = ConfigManager.GetWeight().ToString();
                 CommissionInput.Text = (ConfigManager.GetCommission() * 100).ToString();
                 AdInput.Text = (ConfigManager.GetAdRate() * 100).ToString();
                 DamageInput.Text = (ConfigManager.GetDamageRate() * 100).ToString();
                 ProfitInput.Text = (ConfigManager.GetProfitRate() * 100).ToString();
                 ShipFormulaInput.Text = ConfigManager.GetShipFormula();
+                
+                // 选择物流方式
+                string shippingMethod = ConfigManager.GetShippingMethod();
+                foreach (ComboBoxItem item in ShippingMethodCombo.Items)
+                {
+                    if (item.Content?.ToString() == shippingMethod)
+                    {
+                        ShippingMethodCombo.SelectedItem = item;
+                        break;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -190,11 +158,22 @@ namespace OzonPriceCalculator
                 double realCost = cost * (1 + _model.DamageRate) + calculatedPrice * (_model.CommissionRate + _model.AdRate);
                 _model.RealCost = realCost;
 
+                // 转换为卢布价格
+                double priceRub = ExchangeRateService.ConvertCnyToRub(roundedPrice);
+
+                // 自动判断物流方式
+                string shippingType = PriceService.GetShippingType(weight, priceRub);
+
+                // 自动选择物流方式
+                AutoSelectShippingMethod(shippingType);
+
                 // 更新UI
                 ShipCostDisplay.Text = $"¥ {shipCost:F2}";
                 RealCostDisplay.Text = $"¥ {realCost:F2}";
                 PriceDisplay.Text = $"¥ {calculatedPrice:F2}";
                 RoundedPriceDisplay.Text = $"¥ {roundedPrice:F0}";
+                RubPriceDisplay.Text = $"{Math.Round(priceRub):F0} RUB";
+                RecommendedShippingDisplay.Text = shippingType;
 
                 // 保存配置
                 SaveConfig();
@@ -209,6 +188,10 @@ namespace OzonPriceCalculator
         {
             try
             {
+                if (double.TryParse(CostInput.Text, out double cost))
+                    ConfigManager.SetCost(cost);
+                if (double.TryParse(WeightInput.Text, out double weight))
+                    ConfigManager.SetWeight(weight);
                 if (double.TryParse(CommissionInput.Text, out double commission))
                     ConfigManager.SetCommission(commission / 100.0);
                 if (double.TryParse(AdInput.Text, out double ad))
@@ -219,6 +202,11 @@ namespace OzonPriceCalculator
                     ConfigManager.SetProfitRate(profit / 100.0);
 
                 ConfigManager.SetShipFormula(ShipFormulaInput.Text);
+                if (ShippingMethodCombo.SelectedItem is ComboBoxItem selectedItem)
+                {
+                    ConfigManager.SetShippingMethod(selectedItem.Content?.ToString() ?? "");
+                }
+
                 ConfigManager.Save();
             }
             catch (Exception ex)

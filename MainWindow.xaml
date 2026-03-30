@@ -301,13 +301,13 @@
         </Grid>
         
         <!-- 内容区域 -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0" Margin="0,40,0,0">
-            <StackPanel Margin="20">
+        <ScrollViewer VerticalScrollBarVisibility="Disabled" Padding="0" Margin="0,40,0,0">
+            <StackPanel Margin="16">
 
             <!-- 顶部标题区 -->
-            <StackPanel Margin="0,0,0,16">
+            <StackPanel Margin="0,0,0,12">
                 <TextBlock Text="OZON 定价计算器"
-                           FontSize="24"
+                           FontSize="20"
                            FontWeight="Bold"
                            Foreground="#000000"
                            Margin="0,0,0,2"/>
@@ -318,13 +318,13 @@
             </StackPanel>
 
             <!-- 基础信息卡片 -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,8">
                 <StackPanel>
                     <TextBlock Text="📊 基础信息"
                                FontSize="12"
                                FontWeight="Bold"
                                Foreground="#1D1D1F"
-                               Margin="0,0,0,10"/>
+                               Margin="0,0,0,8"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -335,11 +335,10 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- 产品成本 -->
-                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,10">
+                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,6,8">
                             <Label Content="产品成本" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
                             <TextBox x:Name="CostInput"
                                     Style="{StaticResource MacInputStyle}"
@@ -348,7 +347,7 @@
                         </StackPanel>
 
                         <!-- 产品重量 -->
-                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,0,0,10">
+                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="6,0,0,8">
                             <Label Content="产品重量 / g" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
                             <TextBox x:Name="WeightInput"
                                     Style="{StaticResource MacInputStyle}"
@@ -357,7 +356,7 @@
                         </StackPanel>
 
                         <!-- 物流方式 -->
-                        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
+                        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,8">
                             <Label Content="物流方式" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
                             <ComboBox x:Name="ShippingMethodCombo"
                                      Style="{StaticResource MacComboBoxStyle}"
@@ -392,13 +391,13 @@
             </Border>
 
             <!-- 费率设置卡片 -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,8">
                 <StackPanel>
                     <TextBlock Text="⚙️ 费率设置"
                                FontSize="12"
                                FontWeight="Bold"
                                Foreground="#1D1D1F"
-                               Margin="0,0,0,10"/>
+                               Margin="0,0,0,8"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -411,7 +410,7 @@
                         </Grid.RowDefinitions>
 
                         <!-- 佣金 -->
-                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,10">
+                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,6,8">
                             <Label Content="佣金" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
                             <Grid>
                                 <TextBox x:Name="CommissionInput"
@@ -424,7 +423,7 @@
                         </StackPanel>
 
                         <!-- 广告 -->
-                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,0,0,10">
+                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="6,0,0,8">
                             <Label Content="广告费" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
                             <Grid>
                                 <TextBox x:Name="AdInput"
@@ -437,7 +436,7 @@
                         </StackPanel>
 
                         <!-- 货损 -->
-                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,8,0">
+                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,6,0">
                             <Label Content="货损率" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
                             <Grid>
                                 <TextBox x:Name="DamageInput"
@@ -450,7 +449,7 @@
                         </StackPanel>
 
                         <!-- 利润 -->
-                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="8,0,0,0">
+                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="6,0,0,0">
                             <Label Content="利润率" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
                             <Grid>
                                 <TextBox x:Name="ProfitInput"
@@ -466,16 +465,16 @@
             </Border>
 
             <!-- 计算结果卡片 -->
-            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,8">
                 <StackPanel>
                     <TextBlock Text="💰 计算结果"
                                FontSize="12"
                                FontWeight="Bold"
                                Foreground="#1D1D1F"
-                               Margin="0,0,0,10"/>
+                               Margin="0,0,0,8"/>
 
                     <!-- 物流成本 -->
-                    <Grid Margin="0,0,0,8">
+                    <Grid Margin="0,0,0,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
@@ -485,7 +484,7 @@
                     </Grid>
 
                     <!-- 实际成本 -->
-                    <Grid Margin="0,0,0,8">
+                    <Grid Margin="0,0,0,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
@@ -495,10 +494,10 @@
                     </Grid>
 
                     <!-- 分割线 -->
-                    <Border Height="1" Background="#E5E5E7" Margin="0,4,0,8"/>
+                    <Border Height="1" Background="#E5E5E7" Margin="0,4,0,6"/>
 
                     <!-- 精确售价 -->
-                    <Grid Margin="0,0,0,8">
+                    <Grid Margin="0,0,0,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
@@ -508,7 +507,7 @@
                     </Grid>
 
                     <!-- 整数售价 -->
-                    <Grid Margin="0,0,0,0">
+                    <Grid Margin="0,0,0,6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
@@ -516,14 +515,32 @@
                         <TextBlock Grid.Column="0" Text="推荐售价" Foreground="#34C759" FontWeight="SemiBold" FontSize="11"/>
                         <TextBlock Grid.Column="1" x:Name="RoundedPriceDisplay" Text="¥ 59" Foreground="#34C759" FontWeight="Bold" FontSize="16"/>
                     </Grid>
+
+                    <!-- 卢布价格 -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="折合卢布" Foreground="#FF9500" FontWeight="SemiBold" FontSize="11"/>
+                        <TextBlock Grid.Column="1" x:Name="RubPriceDisplay" Text="710 RUB" Foreground="#FF9500" FontWeight="SemiBold" FontSize="11"/>
+                    </Grid>
+
+                    <!-- 自动物流方式 -->
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="推荐物流方式" Foreground="#5AC8FA" FontWeight="SemiBold" FontSize="11"/>
+                        <TextBlock Grid.Column="1" x:Name="RecommendedShippingDisplay" Text="Small" Foreground="#5AC8FA" FontWeight="SemiBold" FontSize="11"/>
+                    </Grid>
                 </StackPanel>
             </Border>
 
             <!-- 操作区 -->
-            <Grid Margin="0,0,0,12">
+            <Grid Margin="0,0,0,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="8"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="8"/>
                     <ColumnDefinition Width="*"/>
@@ -541,8 +558,6 @@
                        Style="{StaticResource SecondaryButtonStyle}"
                        Click="CopyButton_Click"/>
             </Grid>
-
-
 
             </StackPanel>
         </ScrollViewer>
