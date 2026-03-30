@@ -5,6 +5,8 @@
         Width="500"
         Height="800"
         WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True"
+        WindowState="Normal"
         Background="#FFFFFFEF"
         Foreground="#1D1D1F"
         ResizeMode="NoResize"
@@ -424,11 +426,11 @@
 
                         <!-- 广告 -->
                         <StackPanel Grid.Row="0" Grid.Column="1" Margin="6,0,0,8">
-                            <Label Content="广告费" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
+                            <Label Content="促销率" Style="{StaticResource LabelStyle}" Margin="0,0,0,2"/>
                             <Grid>
                                 <TextBox x:Name="AdInput"
                                         Style="{StaticResource MacInputStyle}"
-                                        Text="10"
+                                        Text="40"
                                         TextAlignment="Right"
                                         Margin="0,0,32,0"/>
                                 <TextBlock Text="%" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#86868B" Margin="0,0,10,0"/>
@@ -441,7 +443,7 @@
                             <Grid>
                                 <TextBox x:Name="DamageInput"
                                         Style="{StaticResource MacInputStyle}"
-                                        Text="20"
+                                        Text="10"
                                         TextAlignment="Right"
                                         Margin="0,0,32,0"/>
                                 <TextBlock Text="%" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#86868B" Margin="0,0,10,0"/>
@@ -454,7 +456,7 @@
                             <Grid>
                                 <TextBox x:Name="ProfitInput"
                                         Style="{StaticResource MacInputStyle}"
-                                        Text="30"
+                                        Text="20"
                                         TextAlignment="Right"
                                         Margin="0,0,32,0"/>
                                 <TextBlock Text="%" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#86868B" Margin="0,0,10,0"/>
@@ -489,22 +491,12 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="实际成本（含佣金、广告费和货损）" Foreground="#666666" FontSize="11"/>
+                        <TextBlock Grid.Column="0" Text="总成本（含物流和货损）" Foreground="#666666" FontSize="11"/>
                         <TextBlock Grid.Column="1" x:Name="RealCostDisplay" Text="¥ 24.00" Foreground="#1D1D1F" FontWeight="SemiBold" FontSize="11"/>
                     </Grid>
 
                     <!-- 分割线 -->
                     <Border Height="1" Background="#E5E5E7" Margin="0,4,0,6"/>
-
-                    <!-- 精确售价 -->
-                    <Grid Margin="0,0,0,6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="精确售价" Foreground="#007AFF" FontWeight="SemiBold" FontSize="11"/>
-                        <TextBlock Grid.Column="1" x:Name="PriceDisplay" Text="¥ 58.33" Foreground="#007AFF" FontWeight="Bold" FontSize="13"/>
-                    </Grid>
 
                     <!-- 整数售价 -->
                     <Grid Margin="0,0,0,6">
@@ -512,8 +504,18 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="推荐售价" Foreground="#34C759" FontWeight="SemiBold" FontSize="11"/>
+                        <TextBlock Grid.Column="0" Text="折后定价" Foreground="#34C759" FontWeight="SemiBold" FontSize="11"/>
                         <TextBlock Grid.Column="1" x:Name="RoundedPriceDisplay" Text="¥ 59" Foreground="#34C759" FontWeight="Bold" FontSize="16"/>
+                    </Grid>
+
+                    <!-- 精确售价 -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="折前定价" Foreground="#007AFF" FontWeight="SemiBold" FontSize="11"/>
+                        <TextBlock Grid.Column="1" x:Name="PriceDisplay" Text="¥ 58.33" Foreground="#007AFF" FontWeight="Bold" FontSize="13"/>
                     </Grid>
 
                     <!-- 卢布价格 -->

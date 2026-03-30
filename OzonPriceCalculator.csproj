@@ -7,10 +7,18 @@
     <AppName>OZON 利润计算器</AppName>
     <AssemblyName>OzonCalc</AssemblyName>
     <RootNamespace>OzonPriceCalculator</RootNamespace>
-    <ApplicationIcon></ApplicationIcon>
+    <ApplicationIcon>ozoncal.ico</ApplicationIcon>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CreateIcon\**\*.cs" />
+    <EmbeddedResource Remove="CreateIcon\**\*" />
+    <None Include="CreateIcon\**\*" />
+  </ItemGroup>
 
 </Project>

@@ -138,8 +138,16 @@ namespace OzonPriceCalculator
                 double shipCost = PriceService.CalcShipCost(_model.ShipFormula, _model.ProductWeight);
                 _model.ShipCost = shipCost;
 
-                // 计算售价
-                double calculatedPrice = PriceService.CalcPrice(
+                // 先算折后成交价，再按促销率反推折前展示价
+                double afterDiscountPrice = PriceService.CalcAfterDiscountPrice(
+                    cost,
+                    weight,
+                    _model.CommissionRate,
+                    _model.DamageRate,
+                    _model.ProfitRate,
+                    _model.ShipFormula);
+
+                double beforeDiscountPrice = PriceService.CalcPrice(
                     cost,
                     weight,
                     _model.CommissionRate,
@@ -148,18 +156,18 @@ namespace OzonPriceCalculator
                     _model.ProfitRate,
                     _model.ShipFormula);
 
-                _model.CalculatedPrice = calculatedPrice;
+                _model.CalculatedPrice = afterDiscountPrice;
 
-                // 四舍五入
-                double roundedPrice = PriceService.RoundPrice(calculatedPrice);
-                _model.RoundedPrice = roundedPrice;
+                // 向上取整后的建议售价
+                double roundedAfterDiscountPrice = PriceService.RoundPrice(afterDiscountPrice);
+                _model.RoundedPrice = roundedAfterDiscountPrice;
 
-                // 计算实际成本（含佣金、广告费和货损）
-                double realCost = cost * (1 + _model.DamageRate) + calculatedPrice * (_model.CommissionRate + _model.AdRate);
+                // 总成本 = 成本 + 货损 + 物流
+                double realCost = cost * (1 + _model.DamageRate) + shipCost;
                 _model.RealCost = realCost;
 
-                // 转换为卢布价格
-                double priceRub = ExchangeRateService.ConvertCnyToRub(roundedPrice);
+                // 转换为卢布价格（按折后成交价）
+                double priceRub = ExchangeRateService.ConvertCnyToRub(roundedAfterDiscountPrice);
 
                 // 自动判断物流方式
                 string shippingType = PriceService.GetShippingType(weight, priceRub);
@@ -170,8 +178,8 @@ namespace OzonPriceCalculator
                 // 更新UI
                 ShipCostDisplay.Text = $"¥ {shipCost:F2}";
                 RealCostDisplay.Text = $"¥ {realCost:F2}";
-                PriceDisplay.Text = $"¥ {calculatedPrice:F2}";
-                RoundedPriceDisplay.Text = $"¥ {roundedPrice:F0}";
+                PriceDisplay.Text = $"¥ {beforeDiscountPrice:F2}";
+                RoundedPriceDisplay.Text = $"¥ {roundedAfterDiscountPrice:F0}";
                 RubPriceDisplay.Text = $"{Math.Round(priceRub):F0} RUB";
                 RecommendedShippingDisplay.Text = shippingType;
 
@@ -229,7 +237,7 @@ namespace OzonPriceCalculator
         {
             try
             {
-                string priceText = RoundedPriceDisplay.Text.Replace("¥ ", "").Trim();
+                string priceText = PriceDisplay.Text.Replace("¥ ", "").Trim();
                 Clipboard.SetText(priceText);
                 
                 CopyButton.Content = "✅ 已复制";

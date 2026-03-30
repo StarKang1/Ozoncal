@@ -11,9 +11,9 @@ namespace OzonPriceCalculator.Models
         private double _productCost;
         private double _productWeight;
         private double _commissionRate = 0.2;
-        private double _adRate = 0.1;
-        private double _damageRate = 0.2;
-        private double _profitRate = 0.3;
+        private double _adRate = 0.4;
+        private double _damageRate = 0.1;
+        private double _profitRate = 0.2;
         private string _shipFormula = "3 + 0.045 * weight";
         
         private double _calculatedPrice;

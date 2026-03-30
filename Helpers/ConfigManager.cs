@@ -12,9 +12,9 @@ namespace OzonPriceCalculator.Helpers
         private static double _weight = 200;
         private static string _shippingMethod = "Extra Small";
         private static double _commission = 0.2;
-        private static double _ads = 0.05;
+        private static double _ads = 0.4;
         private static double _damage = 0.1;
-        private static double _profit = 0.3;
+        private static double _profit = 0.2;
         private static string _shipFormula = "3 + 0.045 * weight";
 
         static ConfigManager()

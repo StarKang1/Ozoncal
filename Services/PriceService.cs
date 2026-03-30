@@ -27,32 +27,54 @@ namespace OzonPriceCalculator.Services
         }
 
         /// <summary>
-        /// 计算售价（核心公式）
+        /// 计算折后成交价（利润率按总成本计算）
+        /// </summary>
+        public static double CalcAfterDiscountPrice(
+            double cost,
+            double weight,
+            double commissionRate,
+            double damageRate,
+            double profitRate,
+            string shipFormula = "3 + 0.045 * weight")
+        {
+            double shipCost = CalcShipCost(shipFormula, weight);
+            double totalCost = cost * (1 + damageRate) + shipCost;
+            double targetProfit = totalCost * profitRate;
+            double settlementRate = 1 - commissionRate;
+
+            if (settlementRate <= 0)
+                return 0;
+
+            return (totalCost + targetProfit) / settlementRate;
+        }
+
+        /// <summary>
+        /// 计算折前售价（将促销率作为折扣反推）
         /// </summary>
         public static double CalcPrice(
-            double cost, 
-            double weight, 
+            double cost,
+            double weight,
             double commissionRate,
             double adRate,
             double damageRate,
             double profitRate,
             string shipFormula = "3 + 0.045 * weight")
         {
-            // 计算物流成本
-            double shipCost = CalcShipCost(shipFormula, weight);
+            double afterDiscountPrice = CalcAfterDiscountPrice(
+                cost,
+                weight,
+                commissionRate,
+                damageRate,
+                profitRate,
+                shipFormula);
 
-            // 计算实际成本（含货损）
-            double realCost = cost * (1 + damageRate);
+            if (adRate <= 0)
+                return afterDiscountPrice;
 
-            // 计算费率总和
-            double rateTotal = 1 - commissionRate - adRate - profitRate;
-
-            // 防止分母为0或负数
-            if (rateTotal <= 0)
+            if (adRate >= 1)
                 return 0;
 
-            // 售价公式：(物流成本 + 实际成本) / (1 - 佣金 - 广告 - 利润)
-            return (shipCost + realCost) / rateTotal;
+            return afterDiscountPrice / (1 - adRate);
         }
 
         /// <summary>
